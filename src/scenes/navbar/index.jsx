@@ -51,7 +51,7 @@ const Navbar = () => {
                         },
                     }}
                 >
-                    NtahPedia
+                    MERN Socio
                 </Typography>
                 {isNonMobileScreens && (
                     <FlexBetween
