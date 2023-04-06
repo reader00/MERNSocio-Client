@@ -2,11 +2,11 @@ import { PersonAddOutlined, PersonRemoveOutlined } from '@mui/icons-material';
 import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setFriends } from 'state';
+import { setFriends, setOtherUserFriends } from 'state';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { _id, friends } = useSelector((state) => state.user);
@@ -21,8 +21,13 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     const isFriend = friends.find((friend) => friend._id === friendId);
     const isSelf = friendId === _id;
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     const patchFriend = async () => {
-        const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`, {
+        const response = await fetch(`http://${host.url}:${host.port}/users/${_id}/${friendId}`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -32,6 +37,18 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
 
         const data = await response.json();
         dispatch(setFriends({ friends: data }));
+
+        if (isProfile) {
+            const friend_response = await fetch(`http://${host.url}:${host.port}/users/${friendId}/friends`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const friend_data = await friend_response.json();
+            dispatch(setOtherUserFriends({ friends: friend_data }));
+        }
     };
 
     return (

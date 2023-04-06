@@ -21,8 +21,13 @@ const UserWidget = ({ userId, picturePath }) => {
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     const getUser = async () => {
-        const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        const response = await fetch(`http://${host.url}:${host.port}/users/${userId}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });

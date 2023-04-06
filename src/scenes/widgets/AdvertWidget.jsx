@@ -9,6 +9,11 @@ const AdvertWidget = () => {
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     return (
         <WidgetWrapper>
             <FlexBetween>
@@ -21,7 +26,7 @@ const AdvertWidget = () => {
                 width="100%"
                 height="auto"
                 alt="advert"
-                src="http://localhost:3001/assets/info4.jpeg"
+                src={`http://${host.url}:${host.port}/assets/info4.jpeg`}
                 style={{ broderRadius: '0.75rem', margin: '0.75rem 0' }}
             />
             <FlexBetween>

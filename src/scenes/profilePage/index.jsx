@@ -14,8 +14,13 @@ const ProfilePage = () => {
     const token = useSelector((state) => state.token);
     const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     const getUser = async () => {
-        const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        const response = await fetch(`http://${host.url}:${host.port}/users/${userId}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -43,7 +48,7 @@ const ProfilePage = () => {
                 <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
                     <UserWidget userId={userId} picturePath={user.picturePath} />
                     <Box m="2rem 0" />
-                    <FriendListWidget userId={userId} isProfile />
+                    <FriendListWidget userId={userId} isProfile={true} />
                 </Box>
 
                 <Box
@@ -52,7 +57,7 @@ const ProfilePage = () => {
                 >
                     <MyPostWidget picturePath={user.picturePath} />
                     <Box m="2rem 0" />
-                    <PostsWidget userId={userId} isProfile />
+                    <PostsWidget userId={userId} isProfile={true} />
                 </Box>
             </Box>
         </Box>

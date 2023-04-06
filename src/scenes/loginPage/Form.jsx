@@ -48,6 +48,11 @@ const Form = () => {
     const isLogin = pageType === 'login';
     const isRegister = pageType === 'register';
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     const register = async (values, onSubmitProps) => {
         // this allows us to send form info with image
         const formData = new FormData();
@@ -56,7 +61,7 @@ const Form = () => {
         }
         formData.append('picturePath', values.picture.name);
 
-        const savedUserResponse = await fetch('http://localhost:3001/auth/register', {
+        const savedUserResponse = await fetch(`http://${host.url}:${host.port}/auth/register`, {
             method: 'POST',
             body: formData,
         });
@@ -69,7 +74,7 @@ const Form = () => {
     };
 
     const login = async (values, onSubmitProps) => {
-        const loggedInResponse = await fetch('http://localhost:3001/auth/login', {
+        const loggedInResponse = await fetch(`http://${host.url}:${host.port}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values),

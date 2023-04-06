@@ -35,8 +35,13 @@ const PostWidget = ({
     const main = palette.neutral.main;
     const primary = palette.primary.main;
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     const patchLike = async () => {
-        const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+        const response = await fetch(`http://${host.url}:${host.port}/posts/${postId}/like`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -55,7 +60,7 @@ const PostWidget = ({
                 name={name}
                 subtitle={location}
                 userPicturePath={userPicturePath}
-                isProfile
+                isProfile={isProfile}
             />
             <Typography color={main} sx={{ mt: '1rem' }}>
                 {description}
@@ -67,7 +72,7 @@ const PostWidget = ({
                     height="auto"
                     alt="post"
                     style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
-                    src={`http://localhost:3001/assets/${picturePath}`}
+                    src={`http://${host.url}:${host.port}/assets/${picturePath}`}
                 />
             )}
             <FlexBetween mt="0.25rem">

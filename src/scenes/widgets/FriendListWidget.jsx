@@ -8,18 +8,31 @@ import { setFriends, setOtherUserFriends } from 'state';
 const FriendListWidget = ({ userId, isProfile }) => {
     const dispatch = useDispatch();
     const { palette } = useTheme();
-    const { friends } = useSelector((state) => (isProfile ? state.otherUser : state.user));
+    const { _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
+    const isSelf = _id === userId;
+    const { friends } = useSelector((state) => (isProfile && !isSelf ? state.otherUser : state.user));
+    console.log('isSelf', isSelf);
+    console.log('userId', userId);
+    console.log('friends');
+    console.log(friends);
+
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
 
     const getFriends = async () => {
-        const response = await fetch(`http://localhost:3001/users/${userId}/friends`, {
+        const response = await fetch(`http://${host.url}:${host.port}/users/${userId}/friends`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         const data = await response.json();
-        if (isProfile) {
+        console.log('datafwl');
+        console.log(data);
+        if (isProfile && !isSelf) {
             dispatch(setOtherUserFriends({ friends: data }));
         } else {
             dispatch(setFriends({ friends: data }));
@@ -28,7 +41,7 @@ const FriendListWidget = ({ userId, isProfile }) => {
 
     useEffect(() => {
         getFriends();
-    }, [friends]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <WidgetWrapper>
@@ -43,6 +56,7 @@ const FriendListWidget = ({ userId, isProfile }) => {
                         name={`${friend.firstName} ${friend.lastName}`}
                         subtitle={friend.occumation}
                         userPicturePath={friend.picturePath}
+                        userIdProfile={userId}
                     />
                 ))}
             </Box>

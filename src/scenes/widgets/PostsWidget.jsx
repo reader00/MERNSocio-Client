@@ -10,8 +10,13 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     console.log(posts);
     const token = useSelector((state) => state.token);
 
+    const host = {
+        url: process.env.REACT_APP_HOST_URL,
+        port: process.env.REACT_APP_HOST_PORT,
+    };
+
     const getPosts = async () => {
-        const response = await fetch('http://localhost:3001/posts', {
+        const response = await fetch(`http://${host.url}:${host.port}/posts`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -19,8 +24,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         dispatch(setPosts({ posts: data }));
     };
 
+    console.log('POSTS UserId', userId);
     const getUserPosts = async () => {
-        const response = await fetch(`http://localhost:3001/posts/${userId}`, {
+        const response = await fetch(`http://${host.url}:${host.port}/posts/${userId}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -62,7 +68,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                         userPicturePath={userPicturePath}
                         likes={likes}
                         comments={comments}
-                        isProfile
+                        isProfile={isProfile}
                     ></PostWidget>
                 )
             )}
